@@ -284,10 +284,6 @@ install_gnome_extensions() {
       gext disable ubuntu-dock@ubuntu.com || true
 }
 
-override_flatpak_theme() {
-    sudo flatpak override --filesystem=xdg-config/gtk-3.0 && sudo flatpak override --filesystem=xdg-config/gtk-4.0
-}
-
 install_theme() {
     # Save current directory and use subshell to prevent directory pollution
     local theme_work_dir
@@ -320,7 +316,7 @@ install_theme() {
             echo -e "${E}Failed to apply tweaks (step 3)" >&2
             exit 1
         }
-        override_flatpak_theme || {
+        sudo flatpak override --filesystem=xdg-config/gtk-3.0 && sudo flatpak override --filesystem=xdg-config/gtk-4.0 || {
             echo -e "${E}failed to override Flatpak theme"
             exit 1
         }
@@ -355,7 +351,10 @@ install_theme() {
 		
         "$theme_work_dir"/GNOME-macOS-Tahoe/install.sh -d -l -la || exit 1
 		
-        override_flatpak_theme || exit 1
+        sudo flatpak override --filesystem=xdg-config/gtk-3.0 && sudo flatpak override --filesystem=xdg-config/gtk-4.0 || {
+            echo -e "${E}failed to override Flatpak theme"
+            exit 1
+        }
 		
         "$theme_work_dir"/GNOME-macOS-Tahoe/install.sh --flatpak || exit 1
 
