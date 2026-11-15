@@ -84,7 +84,7 @@ install_required_softs() {
 
 	local REPOS=(
 		"universe"
-		"-P ppa:agornostal/ulauncher" #add the -P option to add a ppa repository
+		"ppa:agornostal/ulauncher" #add the -P option to add a ppa repository
 	)
 
 	  for repo in "${REPOS[@]}"; do
