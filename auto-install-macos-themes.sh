@@ -245,26 +245,33 @@ configure_firefox() {
 
 install_gnome_extensions() {
     local extensions=(
-        1488
-        19
-        3740
-        3193
-        3843
-        4105
-        779
-        5090
-        4158
-        3733
-        6433
-        4114
-        97
-        2524
-        4994
-        4245
-        8267
-        10288
+        dash-to-dock@micxgx.gmail.com
+		Rounded_Corners@lennart-k
+		gnome-ui-tune@itstime.tech
+		space-bar@luchrioh
+		user-theme@gnome-shell-extensions.gcampax.github.com
+		compiz-alike-magic-lamp-effect@hermes83.github.com
+		tiling-assistant@leleat-on-github
+		CoverflowAltTab@palatis.blogspot.com
+		rounded-windows@marcosgt.github.io
+		gsconnect@andyholmes.github.io
+		Bluetooth-Battery-Meter@maniacx.github.com
+		blur-my-shell@aunetx
+		auto-move-windows@gnome-shell-extensions.gcampax.github.com
+		top-bar-organizer@julian.gse.jsts.xyz
+		caffeine@patapon.info
+		wiggly@mojarch
+		just-perfection-desktop@just-perfection
+		hidetopbar-fixed@local
+		notification-banner-re-reloaded@chrhuang
+		widgets@distro.com
+		appindicatorsupport@rgcjonas.gmail.com
+		#global-menu@unmade.space installed via terminal
+		clipboard-indicator@tudmotu.com
+		kiwimenu@kemma
+		kiwi@kemma
+		Vitals@CoreCoding.com
       )
-        #Fuzzy search, User themes, Compiz alike magic lamp effect, Blur my shell, Just perfection, Notification banner position, Clipboard indicator, Space bar, gnome 4x 5x improvement, Ubuntu tilting assistant, App menu is back, Fildem global menu, Coverflow alt+tab, Rounded corners, Dash2dock animated, Gesture improvements, Kiwi is not apple, Global Menu for Gnome
   
       for ext in "${extensions[@]}"; do
         echo -e "${L}Installing extension $ext..."
