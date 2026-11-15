@@ -136,7 +136,7 @@ install_required_softs() {
     
     for package in "${REQUIRED_PACKAGES[@]}"; do
         echo -e "${L}Installing software $package..."
-        sudo apt -q -y install "$package" || {
+        sudo apt -qq -y install "$package" || {
           echo -e "${E}Failed to install package $package"
 		  echo -e "${L}Continuing anyways..."
           continue
@@ -180,8 +180,16 @@ install_required_softs() {
 
 configure_firefox() {
 	
-    pkill -f firefox || true
-    
+	while true; do
+ 	   read -r -p "Do you agree to kill firefox for theme installation? " yn
+	    case $yn in
+	        [Yy]* ) pkill firefox || true 
+			break ;;
+	        [Nn]* ) exit 0 ;;
+	        * ) echo "Please answer yes or no." ;;
+	    esac
+	done
+	    
     # Wait for Firefox to fully exit before touching prefs.js
     for i in {1..10}; do
         pgrep -f firefox &> /dev/null || break
