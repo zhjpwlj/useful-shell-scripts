@@ -84,7 +84,7 @@ install_required_softs() {
 
 	local REPOS=(
 		"universe"
-		"ppa:agornostal/ulauncher" #add the -P option to add a ppa repository
+		"ppa:agornostal/ulauncher"
 	)
 
 	  for repo in "${REPOS[@]}"; do
@@ -193,6 +193,7 @@ configure_firefox() {
     # Wait for Firefox to fully exit before touching prefs.js
     for i in {1..10}; do
         pgrep -f firefox &> /dev/null || break
+        echo -e "${L}Waiting for firefox to be killed... ($i/10)"
         sleep 1
     done
     
