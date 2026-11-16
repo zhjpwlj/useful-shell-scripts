@@ -271,7 +271,7 @@ install_gnome_extensions() {
 		caffeine@patapon.info
 		wiggly@mojarch
 		just-perfection-desktop@just-perfection
-		hidetopbar-fixed@local
+		#hidetopbar-fixed@local
 		notification-banner-re-reloaded@chrhuang
 		widgets@distro.com
 		appindicatorsupport@rgcjonas.gmail.com
@@ -279,7 +279,6 @@ install_gnome_extensions() {
 		clipboard-indicator@tudmotu.com
 		kiwimenu@kemma
 		kiwi@kemma
-		Vitals@CoreCoding.com
       )
   
       for ext in "${extensions[@]}"; do
