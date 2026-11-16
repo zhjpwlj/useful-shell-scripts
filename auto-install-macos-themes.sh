@@ -361,17 +361,6 @@ install_theme() {
         }
 
         "$theme_work_dir"/GNOME-macOS-Tahoe/install.sh -w || exit 1
-        
-        "$theme_work_dir"/GNOME-macOS-Tahoe/install.sh -d -l || exit 1
-		
-        "$theme_work_dir"/GNOME-macOS-Tahoe/install.sh -d -l -la || exit 1
-		
-        sudo flatpak override --filesystem=xdg-config/gtk-3.0 && sudo flatpak override --filesystem=xdg-config/gtk-4.0 || {
-            echo -e "${E}failed to override Flatpak theme"
-            exit 1
-        }
-		
-        "$theme_work_dir"/GNOME-macOS-Tahoe/install.sh --flatpak || exit 1
 
 		mkdir -p "$HOME/.local/share/gnome-shell/extensions/"
 		git clone https://github.com/Unmade760/orbit-global-menu.git || {
