@@ -129,6 +129,7 @@ install_required_softs() {
         ulauncher
 		make
 		python3-setuptools
+        gnome-shell-extension-autohidetopbar #autohide top bar extension
         )
     
     sudo apt -q update
@@ -270,7 +271,7 @@ install_gnome_extensions() {
 		caffeine@patapon.info
 		wiggly@mojarch
 		just-perfection-desktop@just-perfection
-		#hidetopbar-fixed@local
+		#hidetopbar-fixed@local installednvia apt using package gnome-shell-extension-autohidetopbar
 		notification-banner-re-reloaded@chrhuang
 		widgets@distro.com
 		appindicatorsupport@rgcjonas.gmail.com
@@ -310,7 +311,7 @@ install_theme() {
             echo -e "${E}Failed to clone MacTahoe-gtk-theme" >&2
             exit 1
         }
-        sudo "$theme_work_dir"/MacTahoe-gtk-theme/install.sh -o normal -b --shell -i apple -h smaller -sf --round --silent-mode || {
+        sudo "$theme_work_dir"/MacTahoe-gtk-theme/install.sh -o normal -b --shell -i apple -h smaller -sf  -ns --round --silent-mode || {
             echo -e "${E}Failed to install MacTahoe-gtk-theme" >&2
             exit 1
         }
@@ -399,7 +400,7 @@ install_theme() {
 }
 
 apply_settings() {
-	#apply setting for gnome tweak managed settings
+	#apply setting for gnome tweak managed settings (work-in-progress)
 	gsettings set org.gnome.desktop.interface gtk-theme "MacTahoe-Dark"
 	gsettings set org.gnome.desktop.interface icon-theme "MacTahoe-dark"
 	gsettings set org.gnome.desktop.interface cursor-theme "MacTahoe-cursors"
@@ -409,8 +410,8 @@ apply_settings() {
 	
 	#apply user themes
 	gsettings set org.gnome.shell.extensions.user-theme name "MacTahoe-Dark"
-	
-	
+
+    dbus-run-session -- gnome-shell --nested --wayland #reload wayland session
 }
 
 main() {
