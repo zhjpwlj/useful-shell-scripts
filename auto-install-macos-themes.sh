@@ -1,6 +1,9 @@
 #!/bin/bash
 set -euo pipefail
 
+#TODO add xwayland deamon
+#     add tui
+
 set_variables() {
 	N='\e[0m'           #reset all formattings
     B='\e[1m'           #normal (bolded)
@@ -281,7 +284,7 @@ install_gnome_extensions() {
 		kiwi@kemma
       )
   
-      for ext in "${extensions[@]}"; do
+    for ext in "${extensions[@]}"; do
         echo -e "${L}Installing extension $ext..."
         gext install "$ext" || {
           echo -e "${E}Failed to install extension $ext."
@@ -291,12 +294,18 @@ install_gnome_extensions() {
         gext enable "$ext" || {
           echo -e "${E}Failed to enable extension $ext."
 		  echo -e "${L}This is possibly due to wayland restraints."
-		  echo -e "${L}Logout and log back in before running the script again may help."
-          echo -e "${L}Continuing anyways..."
+          echo -e "${L}Trying again after reloading wayland..."
+          dbus-run-session -- gnome-shell --nested --wayland
+          gext enable "$ext" || {
+            echo -e "${E}Failed."
+            echo -e "${L}Logout and log back in before running the script again may help."
+            echo -e "${L}Continuing anyways..."
+          }
         }
-      done
+    done
 
       gext disable ubuntu-dock@ubuntu.com || true
+      gext enable hidetopbar@mathieu.bidon.ca || true
 }
 
 install_theme() {
