@@ -8,10 +8,10 @@ set_variables() {
 	O='\e[1;38;5;214m'  #orange (bolded)
 	G='\e[1;32m'        #green (bolded)
 
-	E="${R}[ ERROR ]${N} "
-	W="${O}[WARNING]${N} "
-	L="${B}[  LOG  ]${N} "
-	S="${G}[SUCCESS]${N} "
+	E="${R}[ ERROR ]${N} " #Error Dialog
+	W="${O}[WARNING]${N} " #Warning Dialong
+	L="${B}[  LOG  ]${N} " #Log Dialog
+	S="${G}[SUCCESS]${N} " #Success Dialog
 	
 }
 
@@ -97,7 +97,6 @@ install_required_softs() {
       done
 
     local REQUIRED_PACKAGES=(
-    	curl
         appmenu-gtk3-module
         jq
         unzip
@@ -136,7 +135,7 @@ install_required_softs() {
     
     for package in "${REQUIRED_PACKAGES[@]}"; do
         echo -e "${L}Installing software $package..."
-        sudo apt -qq -y install "$package" || {
+        sudo apt -qq -y install "$package" &> /dev/null && echo -e "${L}Package $package is installled. moving to the next one... " || {
           echo -e "${E}Failed to install package $package"
 		  echo -e "${L}Continuing anyways..."
           continue
@@ -315,28 +314,35 @@ install_theme() {
             echo -e "${E}Failed to install MacTahoe-gtk-theme" >&2
             exit 1
         }
-        "$theme_work_dir"/MacTahoe-gtk-theme/install.sh -l -o normal -b --shell -i apple -h smaller -sf --round || {
+        "$theme_work_dir"/MacTahoe-gtk-theme/install.sh -l -o normal -b --shell -i apple -h smaller -sf --round --silent-mode || {
             echo -e "${E}Failed to configure MacTahoe-gtk-theme for libadwaita" >&2
             exit 1
         }
-        sudo "$theme_work_dir"/MacTahoe-gtk-theme/tweaks.sh -g -sf -nd -nb || {
+        "$theme_work_dir"/MacTahoe-gtk-theme/wallpaper/install-gnome-backgrounds.sh || {
+            echo -e "${E}Failed to install wallpapers."
+            echo -e "${L}Proceding anyways..."
+        }
+        sudo "$theme_work_dir"/MacTahoe-gtk-theme/tweaks.sh -g -sf -nd -nb --silent-mode || {
             echo -e "${E}Failed to apply tweaks (step 1)" >&2
             exit 1
         }
-        "$theme_work_dir"/MacTahoe-gtk-theme/tweaks.sh -f || {
+        "$theme_work_dir"/MacTahoe-gtk-theme/tweaks.sh -f --silent-mode || {
             echo -e "${E}Failed to apply tweaks (step 2)" >&2
             exit 1
         }
-        "$theme_work_dir"/MacTahoe-gtk-theme/tweaks.sh -f adaptive || {
-            echo -e "${E}Failed to apply tweaks (step 3)" >&2
-            exit 1
-        }
+        
+        "$theme_work_dir"/MacTahoe-gtk-theme/tweaks.sh -f adaptive --silent-mode 2>/dev/null
+
         sudo flatpak override --filesystem=xdg-config/gtk-3.0 && sudo flatpak override --filesystem=xdg-config/gtk-4.0 || {
             echo -e "${E}failed to override Flatpak theme"
             exit 1
         }
-        "$theme_work_dir"/MacTahoe-gtk-theme/tweaks.sh -F -c Dark || {
+        "$theme_work_dir"/MacTahoe-gtk-theme/tweaks.sh -F -c Dark --silent-mode || {
             echo -e "${E}Failed to apply tweaks (step 4)" >&2
+            exit 1
+        }
+        "$theme_work_dir"/MacTahoe-gtk-theme/tweaks.sh -d --silent-mode || {
+            echo -e "${E}Failed to apply tweaks (step 5)" >&2
             exit 1
         }
 
@@ -354,13 +360,6 @@ install_theme() {
             echo -e "${E}Failed to install cursors" >&2
             exit 1
         }
-
-        git clone https://github.com/kayozxo/GNOME-macOS-Tahoe.git --depth=1 || {
-            echo -e "${E}Failed to clone GNOME-macOS-Tahoe"
-            exit 1
-        }
-
-        "$theme_work_dir"/GNOME-macOS-Tahoe/install.sh -w || exit 1
 
 		mkdir -p "$HOME/.local/share/gnome-shell/extensions/"
 		git clone https://github.com/Unmade760/orbit-global-menu.git || {
