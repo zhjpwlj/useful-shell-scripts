@@ -179,6 +179,13 @@ install_required_softs() {
         fi
     fi
 
+    sudo mkdir -p /etc/apt/keyrings
+    if ! [ -f /etc/apt/keyrings/charm.gpg ]; then
+        curl -fsSL https://repo.charm.sh/apt/gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/charm.gpg
+    fi
+    echo "deb [signed-by=/etc/apt/keyrings/charm.gpg] https://repo.charm.sh/apt/ * *" | sudo tee /etc/apt/sources.list.d/charm.list
+    sudo apt update && sudo apt install gum
+
 }
 
 configure_firefox() {
@@ -294,8 +301,7 @@ install_gnome_extensions() {
         gext enable "$ext" || {
           echo -e "${E}Failed to enable extension $ext."
 		  echo -e "${L}This is possibly due to wayland restraints."
-          echo -e "${L}Trying again after reloading wayland..."
-          dbus-run-session -- gnome-shell --nested --wayland
+          echo -e "${L}Retrying..."
           gext enable "$ext" || {
             echo -e "${E}Failed."
             echo -e "${L}Logout and log back in before running the script again may help."
